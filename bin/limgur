@@ -1,0 +1,53 @@
+#!/usr/bin/env ruby
+
+require 'optparse'
+require 'lib/limgur'
+
+limgur = Limgur.new '6ea137d641083e7ef128c6bcd8a32683'
+
+options = {}
+ARGV.unshift '-h' if ARGV.empty?
+opts = OptionParser.new do |opts|
+  opts.banner = 'Usage: limgur [options]'
+
+  opts.on('-u', '--upload', 'Upload via image or URL') do
+    options[:action] ||= :upload
+  end
+
+  opts.on('-d', '--delete', 'Delete an iamge via hash') do
+    options[:action] ||= :delete
+  end
+
+  opts.on('-s', '--scrot', 'Take a screenshot then upload it') do
+    options[:action] ||= :scrot
+  end
+
+  opts.on_tail('-h', '--help', 'Show this message') do
+    puts opts
+    exit 0
+  end
+
+  opts.on_tail('-v', '--version', 'Show version') do
+    puts "limgur v#{Limgur.version}"
+    puts "Copyright (c) 2010 Danny Tatim <dannytatom@gmail.com>"
+    puts "Licensed under the MIT"
+    exit 0
+  end
+end.parse!
+
+if options[:action] == :upload && ARGV.empty?
+  warn 'Missing image to upload'
+end
+
+if options[:action] == :delete && ARGV.empty?
+  warn 'Missing delete hash'
+end
+
+case options[:action]
+  when :upload
+    puts limgur.upload ARGV[0]
+  when :delete
+    puts limgur.delete ARGV[0]
+  when :scrot
+    puts limgur.scrot
+end
