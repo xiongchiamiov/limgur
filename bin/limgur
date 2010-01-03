@@ -1,10 +1,9 @@
 #!/usr/bin/env ruby
 
-#$:.unshift(File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib')))
+$:.unshift(File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib')))
 
 require 'optparse'
-#require 'limgur/limgur'
-require 'lib/limgur'
+require 'limgur/limgur'
 
 limgur = Limgur.new '6ea137d641083e7ef128c6bcd8a32683'
 
