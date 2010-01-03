@@ -13,6 +13,11 @@ If you've got scrot installed, you can also take a screenshot and upload it in o
         -h, --help                       Show this message
         -v, --version                    Show version
 
+## TODO
+
+* Allow scrot'n to a directory without specifying a filename (eg. limgur -s ~/images/)
+* Accept scrot options while scrot'n (eg. limgur -s -c -d 3 ~/images/wat.png)
+
 ## Copyright
 
 Copyright (c) 2009 Danny Tatom. See LICENSE for details.
