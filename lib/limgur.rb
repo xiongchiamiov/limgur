@@ -48,14 +48,14 @@ class Limgur
     end
   end
 
-  def scrot
-    filename = Time.now.to_s.gsub(' ', '').gsub(':', '') + '.png'
+  def scrot filename=nil
+    filename = Time.now.to_s.gsub(' ', '').gsub(':', '') + '.png' if filename.nil?
 
     system 'scrot ' + filename
     upload File.expand_path filename
   end
 
   def self.version
-    '1.0.0'
+    '1.0.1'
   end
 end
