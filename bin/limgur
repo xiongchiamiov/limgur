@@ -16,7 +16,7 @@ opts = OptionParser.new do |opts|
     options[:action] ||= :upload
   end
 
-  opts.on('-d', '--delete', 'Delete an iamge via hash') do
+  opts.on('-d', '--delete', 'Delete an image via hash') do
     options[:action] ||= :delete
   end
 
