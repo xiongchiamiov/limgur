@@ -5,7 +5,7 @@ class LimgurTest < Test::Unit::TestCase
     FileUtils.mkdir 'tmp'
     FileUtils.cp 'test/test.jpg', 'tmp/test.jpg'
 
-    @limgur = Limgur.new('6ea137d641083e7ef128c6bcd8a32683')
+    @limgur = Limgur.new('90b4d040607755992895fdd5bb586ba2')
   end
 
   teardown do
