@@ -47,9 +47,15 @@ end
 
 case options[:action]
   when :upload
-    puts limgur.upload ARGV[0]
+    ARGV.each do |arg|
+      puts limgur.upload arg
+    end
   when :delete
-    puts limgur.delete ARGV[0]
+    ARGV.each do |arg|
+      puts limgur.delete arg
+    end
   when :scrot
-    puts limgur.scrot ARGV[0]
+    ARGV.each do |arg|
+      puts limgur.scrot arg
+    end
 end
