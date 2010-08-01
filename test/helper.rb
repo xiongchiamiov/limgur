@@ -1,4 +1,3 @@
-require 'turn'
 require 'contest'
 require 'fileutils'
 
