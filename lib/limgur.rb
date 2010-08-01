@@ -8,8 +8,9 @@ class Limgur
   end
 
   def upload image
+    isURL = true
     begin
-      if URI.parse(image).scheme
+      if isURL && URI.parse(image).scheme
         c = Curl::Easy.new 'http://imgur.com/api/upload.json'
         c.http_post Curl::PostField.content('key', @key),
                     Curl::PostField.content('image', image)
@@ -22,16 +23,18 @@ class Limgur
         response = Crack::JSON.parse c.body_str
       end
 
-      if response['error']
-        response['error']['error_msg']
+      if response['rsp']['stat'] == 'fail'
+        response['rsp']['error_msg']
       else
         "Image was uploaded successfully!\n\n" \
         "Imgur page:     #{response['rsp']['image']['imgur_page']}\n" \
         "Original image: #{response['rsp']['image']['original_image']}\n" \
         "Delete hash:    #{response['rsp']['image']['delete_hash']}\n"
       end
-    rescue
-      Curl::Err::ReadError
+    rescue URI::InvalidURIError
+      isURL = false
+      retry
+    rescue Curl::Err::ReadError
       'Please provide a valid image.'
     end
   end

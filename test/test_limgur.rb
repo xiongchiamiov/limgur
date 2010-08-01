@@ -3,7 +3,7 @@ require 'test/helper'
 class LimgurTest < Test::Unit::TestCase
   setup do
     FileUtils.mkdir 'tmp'
-    FileUtils.cp 'test/test.jpg', 'tmp/test.jpg'
+    FileUtils.cp Dir.glob('test/*.jpg'), 'tmp/'
 
     @limgur = Limgur.new('90b4d040607755992895fdd5bb586ba2')
   end
@@ -17,6 +17,24 @@ class LimgurTest < Test::Unit::TestCase
       upload = @limgur.upload 'tmp/test.jpg'
 
       assert_equal 'Image was uploaded successfully!', upload.split("\n").first
+    end
+    
+    test 'uploads an image with spaces in the name' do
+      upload = @limgur.upload 'tmp/test with spaces.jpg'
+      
+      assert_equal 'Image was uploaded successfully!', upload.split("\n").first
+    end
+    
+    test 'uploads an image from a url' do
+      upload = @limgur.upload 'http://github.com/xiongchiamiov/limgur/raw/master/test/test.jpg'
+      
+      assert_equal 'Image was uploaded successfully!', upload.split("\n").first
+    end
+    
+    test 'does not upload an invalid image' do
+      upload = @limgur.upload 'test_empty.jpg'
+      
+      assert_equal 'Please provide a valid image.', upload
     end
   end
 
