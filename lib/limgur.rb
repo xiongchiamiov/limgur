@@ -51,7 +51,9 @@ class Limgur
   def scrot filename=nil
     filename = Time.now.to_s.gsub(' ', '').gsub(':', '') + '.png' if filename.nil?
 
-    system 'scrot ' + filename
+    if !(system 'scrot ' + filename)
+      raise "scrot not installed"
+    end
     upload File.expand_path filename
   end
 

@@ -33,16 +33,32 @@ class LimgurTest < Test::Unit::TestCase
   context 'using scrot' do
     test 'saves a screenshot with default name if not given' do
       filename = Time.now.to_s.gsub(' ', '').gsub(':', '') + '.png'
-    
-      screenshot = @limgur.scrot
-      assert_equal true, File.exists?(filename)
-
-      FileUtils.rm filename
+      
+      begin
+        screenshot = @limgur.scrot
+        assert_equal true, File.exists?(filename)
+  
+        FileUtils.rm filename
+      rescue => e
+        if e.message == "scrot not installed"
+          omit "Scrot not installed"
+        else
+          raise e
+        end
+      end
     end
 
     test 'saves a screenshot with filename given' do
-      screenshot = @limgur.scrot 'tmp/screenshot.png'
-      assert_equal true, File.exists?('tmp/screenshot.png')
+      begin
+        screenshot = @limgur.scrot 'tmp/screenshot.png'
+        assert_equal true, File.exists?('tmp/screenshot.png')
+      rescue => e
+        if e.message == "scrot not installed"
+          omit "Scrot not installed"
+        else
+          raise e
+        end
+      end
     end
   end
 end
