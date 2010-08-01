@@ -7,7 +7,8 @@ class Limgur
     @key = key
   end
 
-  def upload image
+  def upload image, options={}
+    options = {:format => 'Sridn', :output => 'titles'}.merge options
     isURL = true
     begin
       if isURL && URI.parse(image).scheme
@@ -24,18 +25,75 @@ class Limgur
       end
 
       if response['rsp']['stat'] == 'fail'
-        response['rsp']['error_msg']
+        $stderr.puts response['rsp']['error_msg']
+        "fail\n" if options[:format].count('S') > 0
       else
-        "Image was uploaded successfully!\n\n" \
-        "Imgur page:     #{response['rsp']['image']['imgur_page']}\n" \
-        "Original image: #{response['rsp']['image']['original_image']}\n" \
-        "Delete hash:    #{response['rsp']['image']['delete_hash']}\n"
+        output = ''
+        
+        options[:format].each_char do |char|
+          case char
+          when 'f'
+            output << 'File:            ' if options[:output] == 'titles'
+            output << image
+          when 'I'
+            output << 'Image hash:      ' if options[:output] == 'titles'
+            output << response['rsp']['image']['image_hash']
+          when 'D'
+            output << 'Delete hash:     ' if options[:output] == 'titles'
+            output << response['rsp']['image']['delete_hash']
+          when 'i'
+            output << 'Original image:  ' if options[:output] == 'titles'
+            output << '[img]'             if options[:output] == 'bbcode'
+            output << '<img src="'        if options[:output] == 'html'
+            output << response['rsp']['image']['original_image']
+            output << '" />'              if options[:output] == 'html'
+            output << '[/img]'            if options[:output] == 'bbcode'
+          when 'l'
+            output << 'Large thumbnail: ' if options[:output] == 'titles'
+            output << "[url=#{response['rsp']['image']['original_image']}][img]" if options[:output] == 'bbcode'
+            output << '<a href="' << response['rsp']['image']['original_image'] << '"><img src="' if options[:output] == 'html'
+            output << response['rsp']['image']['large_thumbnail']
+            output << '" /></a>'          if options[:output] == 'html'
+            output << '[/img][/url]'      if options[:output] == 'bbcode'
+          when 's'
+            output << 'Small thumbnail: ' if options[:output] == 'titles'
+            output << "[url=#{response['rsp']['image']['original_image']}][img]" if options[:output] == 'bbcode'
+            output << '<a href="' << response['rsp']['image']['original_image'] << '"><img src="' if options[:output] == 'html'
+            output << response['rsp']['image']['small_thumbnail']
+            output << '" /></a>'          if options[:output] == 'html'
+            output << '[/img][/url]'      if options[:output] == 'bbcode'
+          when 'r'
+            output << 'Imgur page:      ' if options[:output] == 'titles'
+            output << '[url='             if options[:output] == 'bbcode'
+            output << '<a href="'         if options[:output] == 'html'
+            output << response['rsp']['image']['imgur_page']
+            output << '">Imgur</a>'       if options[:output] == 'html'
+            output << ']Imgur[/url]'      if options[:output] == 'bbcode'
+          when 'd'
+            output << 'Delete page:     ' if options[:output] == 'titles'
+            output << '[url='             if options[:output] == 'bbcode'
+            output << '<a href="'         if options[:output] == 'html'
+            output << response['rsp']['image']['delete_page']
+            output << '">Delete</a>'       if options[:output] == 'html'
+            output << ']Delete[/url]'      if options[:output] == 'bbcode'
+          when 'S'
+            output << 'Status:          ' if options[:output] == 'titles'
+            output << response['rsp']['stat']
+          when 'n'
+          else
+            $stderr.puts "#{char} not recognized as a format character!"
+          end
+          output << "\n"
+        end
+        
+        return output
       end
     rescue URI::InvalidURIError
       isURL = false
       retry
     rescue Curl::Err::ReadError
-      'Please provide a valid image.'
+      $stderr.puts 'Please provide a valid image.'
+      "invalid image\n" if options[:format].count('S') > 0
     end
   end
 

@@ -7,6 +7,9 @@ require 'limgur/limgur'
 
 limgur = Limgur.new '90b4d040607755992895fdd5bb586ba2'
 
+stdout = $stdout
+stderr = $stderr
+
 options = {}
 ARGV.unshift '-h' if ARGV.empty?
 opts = OptionParser.new do |opts|
@@ -22,6 +25,35 @@ opts = OptionParser.new do |opts|
 
   opts.on('-s', '--scrot', 'Take a screenshot then upload it') do
     options[:action] ||= :scrot
+  end
+  
+  opts.on('-f FORMAT', '--format=FORMAT', 'Format of the output, with each letter being one line',
+                                          "\tf  filename",
+                                          "\tI  image hash",
+                                          "\tD  delete hash",
+                                          "\ti  image url",
+                                          "\tl  large thumbnail",
+                                          "\ts  small thumbnail",
+                                          "\tr  imgur page",
+                                          "\td  delete page",
+                                          "\tS  status",
+                                          "\tn  newline") do |val|
+    options[:format] = val
+  end
+  
+  opts.on('-o OPTION', '--output=OPTION', ['plaintext', 'titles', 'bbcode', 'html'],
+          'Choose a method of presenting any URLs',
+          "\tOne of: plaintext, titles, bbcode, html") do |val|
+    options[:output] = val
+  end
+  
+  opts.on('-q', '--quiet', "Don't write to stdout") do
+    $stdout = File.new('/dev/null', 'w')
+  end
+  
+  opts.on('-Q', '--really-quiet', "Don't write to stdout or stderr") do
+    $stdout = File.new('/dev/null', 'w')
+    $stderr = File.new('/dev/null', 'w')
   end
 
   opts.on_tail('-h', '--help', 'Show this message') do
@@ -48,7 +80,7 @@ end
 case options[:action]
   when :upload
     ARGV.each do |arg|
-      puts limgur.upload arg
+      puts limgur.upload arg, options
     end
   when :delete
     ARGV.each do |arg|
@@ -59,3 +91,6 @@ case options[:action]
       puts limgur.scrot arg
     end
 end
+
+$stdout = stdout
+$stderr = stderr
