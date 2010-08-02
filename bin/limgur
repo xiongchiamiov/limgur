@@ -3,7 +3,7 @@
 $:.unshift(File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib')))
 
 require 'optparse'
-require 'limgur/limgur'
+require 'limgur'
 
 limgur = Limgur.new '90b4d040607755992895fdd5bb586ba2'
 
@@ -63,7 +63,8 @@ opts = OptionParser.new do |opts|
 
   opts.on_tail('-v', '--version', 'Show version') do
     puts "limgur v#{Limgur.version}"
-    puts "Copyright (c) 2010 Danny Tatim <dannytatom@gmail.com>"
+    puts "Copyright (c) 2009-2010 Danny Tatom <dannytatom@gmail.com>"
+    puts "Copyright (c) 2010      James Pearson <xiong.chiamiov@gmail.com>"
     puts "Licensed under the MIT"
     exit 0
   end

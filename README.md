@@ -20,4 +20,4 @@ If you've got scrot installed, you can also take a screenshot and upload it in o
 
 ## Copyright
 
-Copyright (c) 2009 Danny Tatom, 2010 James Pearson. See LICENSE for details.
+Copyright (c) 2009-2010 Danny Tatom, 2010 James Pearson. See LICENSE for details.
